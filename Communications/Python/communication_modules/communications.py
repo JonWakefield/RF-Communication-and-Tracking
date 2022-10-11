@@ -18,6 +18,7 @@ class Communications():
         self.byte_length = byte_length
         self.message = message
         self.received_message = ''
+        self.message_confirmation = 'y:' # sent back to arduino on successful reception of message
 
     # select and send number of bytes to arduino to transmit
     def send_byte_length(self):
@@ -53,7 +54,7 @@ class Communications():
             print(serial_data) # print serial data to know where arduino is at 
             # wait for arduino to be ready for input
             if (serial_data == "b'ready 1\\r\\n'" ):
-                self.message = input(" Enter the message to send: ")
+                self.message = input(" Enter the message to send: ").strip()
                 self.byte_length = str(len(self.message)) # get length of the message
                 # add encryption here:
                 message_encrypted = self.encryption([string.ascii_lowercase, string.ascii_uppercase, string.punctuation])
@@ -123,11 +124,17 @@ class Communications():
         print(f"The signal-to-noise Ratio is {received_snr_value}")
         print(f"The received rssi value is {received_rssi_value}")
 
-    def reply(self):
+        # Next, now that we have received a message we need to send a confirmation back
+        # inform arduino we received a message and we should send one back:
+        self.send_confirmation()
+
+        return
+
+    def send_confirmation(self):
         '''function replys back to the transmitter after receiving a message'''
-        reply = 'y' # send simple 1 byte string back
-        # at_send_reply = ""
-        # self.arduino.write(bytes(message_encrypted.encode()))
+        
+        self.arduino.write(bytes(self.message_confirmation.encode()))
+        return
 
     def communication_beacon_setup(self):
         ''' function allows for the add or removal of communication beacon addressing'''
@@ -192,7 +199,7 @@ class Communications():
             #serial_data = str(self.arduino.readline().decode('latin-1')).strip() # read in line from arduino serial monitor. convert to string for comparision checks       
             serial_data = str(self.arduino.readline())
             sleep(0.05)
-            if serial_data != "b''":
+            if (serial_data != "b''") and (serial_data != "b'\\r\\n'"):
                 print(serial_data)
             # check to see if we received a transmission:
             check_if_transmission_received = serial_data.rfind("+RCV") #look for "+RCV" to know we received a transmission
@@ -203,7 +210,8 @@ class Communications():
                 print(self.received_message)
                 self.split_reception() # call split reception to extract data
 
-                # Next, now that we have received a message we need to send a confirmation back
+                
+                
 
             # if everything button pressed enter this conditional:    
             if (serial_data == "b'every\\r\\n'"):
