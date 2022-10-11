@@ -9,11 +9,10 @@ from time import sleep
 class Communications():
 
 
-
     def __init__(self, key: int, byte_length:int=None, message: str=None):
 
         # set up the arduino, make sure port # is correct
-        self.arduino = serial.Serial(port='COM6', baudrate=115200, timeout=.1)
+        self.arduino = serial.Serial(port='COM6', baudrate=9600, timeout=.1)
         self.key = key
         self.key_decrypt = key * -1
         self.byte_length = byte_length
@@ -134,6 +133,7 @@ class Communications():
         ''' function allows for the add or removal of communication beacon addressing'''
         # print("Which beacon would you like to setup?")
         # first, wait for arduino to be ready:
+        wrong_input = "N"
         while True:
             #serial_data = str(self.arduino.readline().decode('UTF-8')).strip()
             serial_data = str(self.arduino.readline())
@@ -150,6 +150,7 @@ class Communications():
                     return
                 else:
                     print("invalid beacon action!")
+                    self.arduino.write(bytes(wrong_input.encode()))
                     return
 
     def everything_menu(self):
@@ -157,6 +158,7 @@ class Communications():
             # CURRENT OPTIONS:
             # 1. transmit a message
             # 2. Select communication beacon on / off '''
+        wrong_input = "N"
         # list options to user, get user input
         print("Welcome to the Everything menu, Please make a selection:")
         print("1. Transmit a message")
@@ -177,6 +179,7 @@ class Communications():
             return
         else:
             print("action not recognized, try again.")
+            self.arduino.write(bytes(wrong_input.encode()))
             return
             # allow user to re-enter a command here:
 
