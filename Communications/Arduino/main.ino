@@ -3,11 +3,13 @@
 // communicate from python to arduino using regular serial
 #include <SoftwareSerial.h>
 
-// WHEN PULLING FROM GIT: CHECK LORA ADDRESSES MOST LIKELY WILL NEED TO BE CHANGED
+
 
 // location of software serial pins:
+// set up softwareserial
 SoftwareSerial mySerial(2, 3);
 
+// define global variables:
 String lora_band = "915000000"; //enter band as per your country
 String lora_networkid = "5";    //enter Lora Network ID
 String lora_address = "1";      //enter Lora address
@@ -18,6 +20,8 @@ String message;
 String garbage;
 int first_transmit_message = 0;
 String incoming_string;
+String check_reception_string = "d:";
+String check_reception_length = "2";
 #define transmit_button 11
 #define everything_button 12
 int x = 0;
@@ -158,6 +162,15 @@ void everything_button_selection() {
     return;
   }
 }
+
+
+void confirmation_message_transmit() {
+  // function sends back a confirmation message to the sender
+  Serial.println("sending confirmation back...");
+  delay(1000);
+  mySerial.println("AT+SEND=" + lora_RX_address + "," + check_reception_length + "," + check_reception_string);
+}
+
 void loop()
 {
   // enter conditional when we want to transmit the message, by pressing button
@@ -185,6 +198,15 @@ void loop()
 
     Serial.println("serial available");
     incoming_string = mySerial.readString();
+
     Serial.println(incoming_string);
+    
+    // after we recevied a message, send confirmation back to original transmitter:
+    if (incoming_string.startsWith("+RCV")) {
+      
+      confirmation_message_transmit();
+    }
+
+    
   }
 }
