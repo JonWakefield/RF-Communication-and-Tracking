@@ -14,7 +14,7 @@ def main():
     communication_RF = Communications(private_key)
     # default to read_serial_monitor
     # main juice of program will take place in read_serial_monitor method
-    print("reading in serial monitor:")
+    print("Initilizing Program:")
     communication_RF.read_serial_monitor()
 
 

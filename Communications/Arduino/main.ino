@@ -20,6 +20,7 @@ String message;
 String garbage;
 int first_transmit_message = 0;
 String incoming_string;
+String incoming_string_2;
 String check_reception_string = "d:";
 String check_reception_length = "2";
 #define transmit_button 11
@@ -180,7 +181,7 @@ void loop()
     // will need to change lora_RX_address depending on if comms beacon is active
     Serial.println("every");
     everything_button_selection();
-    Serial.println("exiting everything menu selection...");
+    Serial.println("Exiting the Everything Menu...");
     // for now, pause module allowing operator to give power to the lora
     delay(50);
   }
@@ -202,10 +203,16 @@ void loop()
     Serial.println(incoming_string);
     
     // after we recevied a message, send confirmation back to original transmitter:
-    if (incoming_string.startsWith("+RCV")) {
-      
-      confirmation_message_transmit();
-    }
+//    if (incoming_string.startsWith("+RCV")) {
+//      
+//      confirmation_message_transmit();
+//    }
+
+  if (Serial.available()) {
+    incoming_string_2 = Serial.readString();
+    Serial.println("in serial avaiable statement");
+    confirmation_message_transmit();
+  }
 
     
   }

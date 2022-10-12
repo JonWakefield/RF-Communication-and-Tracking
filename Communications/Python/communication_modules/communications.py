@@ -1,7 +1,7 @@
 import serial 
 import string
 from time import sleep
-
+import re
 
 
 
@@ -18,7 +18,7 @@ class Communications():
         self.byte_length = byte_length
         self.message = message
         self.received_message = ''
-        self.message_confirmation = 'y:' # sent back to arduino on successful reception of message
+        self.message_confirmation = 'y+' # sent back to arduino on successful reception of message
 
     # select and send number of bytes to arduino to transmit
     def send_byte_length(self):
@@ -26,9 +26,9 @@ class Communications():
         # loop through until arduino is ready for input
         while True:
             # print the serial data from the py to the terminal
-            #serial_data = str(self.arduino.readline().decode('UTF-8')).strip()
+            serial_data = str(self.arduino.readline().decode('UTF-8')).strip()
             serial_data = str(self.arduino.readline())
-            print(serial_data) # print serial data to know where arduino is at 
+            #print(serial_data) # print serial data to know where arduino is at 
             # if arduino is ready for input, send input to arduino
             if (serial_data == "b'ready 0\\r\\n'"):
                 #self.arduino.write(bytes(self.byte_length, 'UTF-8'))
@@ -37,7 +37,7 @@ class Communications():
                 sleep(0.1)
             # make sure arudino has received byte length before returning
             if (serial_data == "b'confirm\\r\\n'"):
-                print("received byte confirm")
+                # print("received byte confirm")
                 return
 
         # what to do if we never receive confirm ?
@@ -63,7 +63,7 @@ class Communications():
                 sleep(0.1)
             # once confirmation: return
             if (serial_data == "b'confirm\\r\\n'"):
-                print("received message confirm")
+                # print("received message confirm")
                 return
 
             # what to do if we never receive confirm ?
@@ -71,8 +71,6 @@ class Communications():
 
 
     def encryption(self, alphabet):
-
-        print("in encryption method")
 
         def shift_alphabet(alphabet):
             return alphabet[self.key:] + alphabet[:self.key]
@@ -82,7 +80,7 @@ class Communications():
         final_shifted_alphabet = ' '.join(shifted_alphabet)
         table = str.maketrans(final_alphabet, final_shifted_alphabet)
 
-        print("encypted message", self.message.translate(table))
+        print("The Encypted Message Is:", self.message.translate(table))
         return str(self.message.translate(table))
 
 
@@ -103,7 +101,7 @@ class Communications():
         ''' function splits the received transmission into a list with format:
             +RCV=<Address>,<Length>,<Data>,<RSSI>,<SNR>,'''
 
-
+        a = ""
         # need to split received transmission until various parts:
         # print("the value in the string is:", self.received_message)
         # split the string at each ,
@@ -114,16 +112,24 @@ class Communications():
         received_rssi_value = received_list[3]
         try:
             received_snr_value = received_list[4]
+            received_snr_value = re.sub("[^0-9]","", received_snr_value)
         except:
-            print("No snr value received")
+            print("no SNR value received")
             received_snr_value = False
         # decrypt the received message:
         self.received_message = self.decrpytion([string.ascii_lowercase, string.ascii_uppercase, string.punctuation])
-        print(f"The received Encrypted message is: {encrypted_received_message}")
-        print(f"The decryped message is: {self.received_message}" )
-        print(f"The signal-to-noise Ratio is {received_snr_value}")
-        print(f"The received rssi value is {received_rssi_value}")
-
+        # check if message was confirmation message:
+        if (self.received_message == self.message_confirmation):
+            print("Confirmation Received")
+            print("Message was successfully transmitted and Received")
+            print("Returning to Serial Monitor...\n")
+        else:
+            # print(f"{a:<20} Home Team Points Multiplier: {a:<4} {home_multiplier:.2f}")
+            print(f"{a:<5}The received Encrypted message is: {encrypted_received_message}")
+            print(f"{a:<5}The decryped message is: {self.received_message}" )
+            print(f"{a:<5}The signal-to-noise Ratio is: {received_snr_value}" )
+            print(f"{a:<5}The received rssi value is: {received_rssi_value}")
+            print(f"{a:<5}Returning To Serial Monitor:")
         # Next, now that we have received a message we need to send a confirmation back
         # inform arduino we received a message and we should send one back:
         self.send_confirmation()
@@ -194,24 +200,22 @@ class Communications():
         ''' function continously reads in the serial monitor 
             from the arduino'''
         # enter inf. loop:
-        print("in read func")
+        a = ""
         while True:
             #serial_data = str(self.arduino.readline().decode('latin-1')).strip() # read in line from arduino serial monitor. convert to string for comparision checks       
             serial_data = str(self.arduino.readline())
             sleep(0.05)
-            if (serial_data != "b''") and (serial_data != "b'\\r\\n'"):
-                print(serial_data)
+            if (serial_data != "b''") and (serial_data != "b'\\r\\n'") and (serial_data != "b'\\n'"):
+                # remove b' and \r\n' from string:
+                print(f"{serial_data}")
             # check to see if we received a transmission:
             check_if_transmission_received = serial_data.rfind("+RCV") #look for "+RCV" to know we received a transmission
             if (check_if_transmission_received != -1):
                 # will enter conditional on confirmation of transmission
-                print("reception received:")
+                print(f"\n{a:<10}Reception Incoming:\n")
                 self.received_message = serial_data # set serial data to received_message variable
-                print(self.received_message)
+                # print(self.received_message)
                 self.split_reception() # call split reception to extract data
-
-                
-                
 
             # if everything button pressed enter this conditional:    
             if (serial_data == "b'every\\r\\n'"):
@@ -222,6 +226,11 @@ class Communications():
             if (serial_data == "b'confirm 3\\r\\n'"):
                 # successfully sent transmission: return
                 print(f"Successfully sent message {self.message}")
+
+            
+
+
+            
             
 
 
