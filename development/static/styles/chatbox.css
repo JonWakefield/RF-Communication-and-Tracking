@@ -1,0 +1,386 @@
+
+.chatbox-container {
+    width: 25.0%;
+    height: 75%;
+    /* background: rgb(5, 19, 19); */
+    margin: 1%;
+    border-radius: 15px;
+    box-shadow: 0.5rem 0.5rem rgba(0,0,0, 0.4);
+}
+
+/* Start: Chatbox header  */
+.chatbox-header {
+    width: 100%;
+    height: 7.0%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    background-color: #EEEEEE;
+    background-image: linear-gradient(to top,#EEEEEE 20% , #dddcdc 100% );
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+
+}
+
+.chatbox-header h1 {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    /* font-size: 1.8rem; */
+    font-weight: 100;
+    /* text-transform: uppercase; */
+    letter-spacing: 0.2rem;
+    text-decoration-thickness: 0.4rem;
+    text-decoration: underline #050505;
+    text-shadow: 0 0.2rem 0.3rem rgba(0,0,0,0.5);
+}
+
+
+
+/* Finish: Chatbox header */
+/* Start: Chatbox body */
+.chatbox-body {
+    width: 100%;
+    height: 75.0%;
+    /* display: flex; */
+    /* justify-content: center;
+    align-content: center; */
+    /* background: rgb(226, 231, 232);*/    
+}
+
+/* Start of All properties related to chatbox messages */
+.chatbox-chatlog {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+    /* margin: 3.0%; */
+    background-color: #12121f;
+    /* background-color: #eee; */
+
+}
+
+.messages__item {
+    /* background: orange; */
+    max-width: 60.6%;
+    width: fit-content;
+    margin-bottom: 3.0%;
+    margin-left: 5.0%;
+}
+
+.messages__item--baseStation {
+    /* display: flex;
+    text-align: flex-start; */
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-style: solid;
+    border: 1rem;
+    border-color: black;
+    border-radius: 12px;
+    /* background: #147efb; */
+    background: #5fc9f8;
+    /* background: linear-gradient(rgb(0, 229, 255) 100%, rgb(255, 143, 178) 0%, rgb(167, 151, 255) 0% ); */
+    margin-right: auto;
+    font-size: 1.0rem;
+    font-weight: bold;  
+    color: #050505;
+}
+
+.messages__item--rover {
+    /* display: flex;
+    text-align: flex-start; */
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-style: solid;
+    border: 1rem;
+    border-color: black;
+    border-radius: 12px;
+    /* background: rgb(200, 198, 198); */
+    background: #53d769;
+    margin-right: auto;
+    font-weight: bold;  
+    font-size: 1.0rem;
+    /* font-weight: bold;   */
+}
+
+.messages__time--rover {
+    text-align: end;
+    font-size: 0.70rem;
+    color: #36454F;
+}
+
+.messages__time--baseStation {
+    text-align: end;
+    font-size: 0.70rem;
+}
+
+
+/* finish all properties related to chatbox messages */
+
+
+/* Input message & Submit button controls: */
+.chatbox-message-controls {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    background: #222a2f;
+    /* background-color: #EEEEEE;
+    background-image: linear-gradient(to top,#EEEEEE 20% , #dddcdc 100% ); */
+}
+
+#chatbox-input-message-div {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#message-input {
+    width: 95%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    text-align: flex-start;
+    align-items: center;
+    padding-left: 2.0%;
+    font-size: 110%;
+    border-radius: 32px;
+    /* background-color: #eee; */
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 2.5%;
+    margin-right: 2.5;
+}
+
+#chatbox-submit-div {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#submit-message-button {
+    width: 75%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    text-align: flex-start;
+    align-items: center;
+    padding-left: 2.0%;
+    font-size: 80%;
+    border-radius: 4px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 2.5%;
+    margin-right: 2.5;
+    border-radius: 16px;
+    background-color:  #eee;
+    text-shadow: 0.1rem 0.1rem rgba(0,0,0,0.5);
+
+}
+
+#submit-message-button:hover {
+    color: #ffd700;
+    border: 0.2rem solid #777;
+    transition: all 1.2s ease;
+    /* cursor: pointer; */
+}
+/* Finish: Chatbox Body */
+
+/* Start: Chatbox Bottom */
+#chatbox-bottom {
+    width: 100%;
+    height: 18%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    background-color: #EEEEEE;
+    background-image: linear-gradient(to top,#EEEEEE 20% , #dddcdc 100% );
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+
+
+.toggle-lora-container {
+    width: 100%;
+    height: 100%;
+    
+    margin-top: 3.25%;
+}
+
+#toggle-lora-button-wrapper {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+
+}
+
+#toggle-lora-text {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+    padding-top: 5px;
+}
+
+#toggle-lora-text h4 {
+    text-align: center;
+
+}
+
+
+.toggle-lora-button {
+    width: 80px;
+    height: 40px;
+    background: gray;
+    border-radius: 30px;
+    /* padding: 5px; */
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-lora-button > .inner-circle {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    border-radius: 50%;
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-lora-button.active {
+    background: #00acee;
+}
+
+.toggle-lora-button.active > .inner-circle {
+    margin-left: 40px;
+}
+
+.toggle-comms-beacon-container {
+    width: 100%;
+    height: 100%;
+    
+    margin-top: 3.25%;
+}
+
+#toggle-comms-beacon-wrapper {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+}
+
+#toggle-comms-beacon-text {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+    padding-top: 5px;
+}
+
+#toggle-comms-beacon-text h4 {
+    text-align: center;
+
+}
+
+.toggle-comms-beacon-button {
+    
+    width: 80px;
+    height: 40px;
+    background: gray;
+    border-radius: 30px;
+    /* padding: 5px; */
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-comms-beacon-button > .inner-circle {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    border-radius: 50%;
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-comms-beacon-button.active {
+    background: #00acee;
+}
+
+.toggle-comms-beacon-button.active > .inner-circle {
+    margin-left: 40px;
+}
+
+
+
+
+/* Serial monitor button CSS: */
+
+.toggle-serial-monitor-container {
+    width: 100%;
+    height: 100%;
+    
+    margin-top: 3.25%;
+}
+
+#toggle-serial-monitor-wrapper {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+}
+
+#toggle-serial-monitor-text {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+    padding-top: 5px;
+
+}
+
+#toggle-serial-monitor-text h4 {
+    text-align: center;
+
+}
+
+.toggle-serial-monitor-button {
+    
+    width: 80px;
+    height: 40px;
+    background: gray;
+    border-radius: 30px;
+    /* padding: 5px; */
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-serial-monitor-button > .inner-circle {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    border-radius: 50%;
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-serial-monitor-button.active {
+    background: #00acee;
+}
+
+.toggle-serial-monitor-button.active > .inner-circle {
+    margin-left: 40px;
+}

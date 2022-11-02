@@ -1,0 +1,129 @@
+
+
+
+#map-container {
+    width: 49.0%;
+    height: 75%;
+    /* background: rgb(190, 212, 212); */
+    /* background-image: url("images\\campus_map.png"); */
+    /* display: flex;
+    justify-content: flex-start;
+    align-items: flex-start; */
+    border-radius: 15px;
+    box-shadow: 0.5rem 0.5rem rgba(0,0,0, 0.4);
+    
+}
+
+#map-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 85%;
+    /* background-color: aqua; */
+    /* background-image: url("images\\campus_map.png"); */
+    background-position: center; /* Center the image */
+    background-size: contain; 
+    /* background: rgb(190, 212, 212); */
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+
+}
+
+
+#map-footer {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+    height: 15%;
+    background-color: #EEEEEE;
+    background-image: linear-gradient(to top,#EEEEEE 20% , #dddcdc 100% );
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;    
+}
+
+
+/* Tempory input time field for DEMO */
+#temp-tracker-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.beacon-time {
+    width: 60%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    /* padding-left: 2.0%; */
+    /* font-size: 110%; */
+    border-radius: 10px;
+    background-color: #eee;
+    padding-left: 1.5%;
+    /* margin-top: 5%;
+    margin-left: 2.5%;
+    margin-right: 2.5; */
+    margin-bottom: 5%;
+    margin-right: 2.5%;
+
+}
+
+
+#toggle-tracker-container {
+    width: 100%;
+    height: 100%;
+    margin-top: 1.25%;
+}
+
+
+#toggle-tracker-button-wrapper {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+
+}
+
+#toggle-tracker-text {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+    padding-top: 5px;
+}
+
+#toggle-tracker-text h4 {
+    text-align: center;
+
+}
+
+
+.toggle-tracker-button {
+    width: 80px;
+    height: 40px;
+    background: gray;
+    border-radius: 30px;
+    /* padding: 5px; */
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-tracker-button > .inner-circle {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    border-radius: 50%;
+    transition: all 300ms ease-in-out;
+}
+
+.toggle-tracker-button.active {
+    background: #00acee;
+}
+
+.toggle-tracker-button.active > .inner-circle {
+    margin-left: 40px;
+}

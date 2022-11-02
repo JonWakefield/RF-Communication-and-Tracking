@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Base Station</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main.css') }}">
+        <!-- <link rel="stylesheet" type="text/css" href="static/styles/main.css"> -->
+    </head>
+    <body>
+        <div class="body-container">
+            <div class="chatbox-container">
+                <div class="chatbox-header">
+                    <h1>RF Messenger</h1>
+                </div>
+                <div class="chatbox-body">
+                    <div class="chatbox-chatlog">
+                    </div>
+                    <div class="chatbox-message-controls">
+                        <div id="chatbox-input-message-div">
+                            <input type="text" placeholder="Enter Message" id="message-input" class="message_input">
+                        </div>
+                        <div id="chatbox-submit-div">
+                            <button  type="submit" class="submit-message" id="submit-message-button"> submit </button> 
+                        </div>
+                    </div>
+                </div>
+                <div id="chatbox-bottom">
+                    <div class="toggle-lora-container">
+                        <div id="toggle-lora-button-wrapper">
+                            <div class="toggle-lora-button" onclick="this.classList.toggle('active')">
+                                <div class="inner-circle"></div>
+                            </div>
+                        </div>
+                        <div id="toggle-lora-text">
+                            <h5>Activate Lora</h5>
+                        </div>
+                    </div>
+                    <div class="toggle-serial-monitor-container">
+                        <div id="toggle-serial-monitor-wrapper">
+                            <div class="toggle-serial-monitor-button" onclick="this.classList.toggle('active')">
+                                <div class="inner-circle"></div>
+                            </div>
+                        </div>
+                        <div id="toggle-serial-monitor-text">
+                            <h5>Activate Serial</h5>
+                        </div>
+                    </div>
+                    <div class="toggle-comms-beacon-container">
+                        <div id="toggle-comms-beacon-wrapper">
+                            <div class="toggle-comms-beacon-button" onclick="this.classList.toggle('active')">
+                                <div class="inner-circle"></div>
+                            </div>
+                        </div>
+                        <div id="toggle-comms-beacon-text">
+                            <h5>Activate Beacon</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="map-container">
+                <div id="map-body">
+                </div>
+                <div id="map-footer">
+                    <div id="toggle-tracker-container">
+                        <div id="toggle-tracker-button-wrapper">
+                            <div class="toggle-tracker-button" onclick="this.classList.toggle('active')">
+                                <div class="inner-circle"></div>
+                            </div>
+                        </div>
+                        <div id="toggle-tracker-text">
+                            <h5>Activate Tracker</h5>
+                        </div>
+                    </div>
+                    <div id="temp-tracker-input">
+                        <input type="text" placeholder="Beacon 1 time" class="beacon-time" id="beacon1time">
+                        <input type="text" placeholder="Beacon 2 time" class="beacon-time" id="beacon2time">
+                        <input type="text" placeholder="Beacon 3 time" class="beacon-time" id="beacon3time">
+                        <button  type="submit" class="submit-times" id="submit-times-id"> submit </button> 
+                    </div>
+                </div>
+                <!-- <img src="development\static\images\campus_map.png" alt="campus_map"> -->
+            </div>
+            <div class="tracking-container">
+                <div id="tracking-header">
+                    <h1> Rover Tracking</h1>
+                </div>
+                <div id="tracking-body">
+                    <div id="tracking-update-beacons">
+                        <h2> Update Beacon Coordinates</h2>
+                        <div class="update-beacons">
+                            <h3> Beacon 1:</h3>
+                            <input type="text" placeholder="X" class="update-beacon-input" id="beacon1x">
+                            <input type="text" placeholder="Y" class="update-beacon-input" id="beacon1y">
+                            <button  type="submit" class="update-beacon-button" id="beacon1Update"> Update </button> 
+                        </div>
+                        <div class="update-beacons">
+                            <h3> Beacon 2:</h3>
+                            <input type="text" placeholder="X" class="update-beacon-input" id="beacon2x">
+                            <input type="text" placeholder="Y" class="update-beacon-input" id="beacon2y">
+                            <button  type="submit" class="update-beacon-button" id="beacon2Update"> Update </button> 
+                        </div>
+                        <div class="update-beacons">
+                            <h3> Beacon 3:</h3>
+                            <input type="text" placeholder="X" class="update-beacon-input" id="beacon3x">
+                            <input type="text" placeholder="Y" class="update-beacon-input" id="beacon3y">
+                            <button  type="submit" class="update-beacon-button" id="beacon3Update"> Update </button> 
+                        </div>
+                    </div>
+                    <div id="tracking-empty"></div>
+                </div>
+                <div id="tracking-footer">
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- <script type="module" src="../dist/main.js"></script> -->
+    <script type="module" src="{{ url_for('static', filename='dist/main.js') }}"></script>
+</html>
