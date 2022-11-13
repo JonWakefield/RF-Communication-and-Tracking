@@ -14,7 +14,7 @@ class Communications():
     def __init__(self, key: int):
 
         # set up the arduino, make sure port # is correct
-        self.arduino = serial.Serial(port='COM6', baudrate=9600, timeout=.1)
+        self.arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
         self.arduino1 = serial.threaded.LineReader
         self.key = key
         self.key_decrypt = key * -1
@@ -186,10 +186,10 @@ class Communications():
             # read data in from the serial monitor
             serial_data = str(self.arduino.readline())
             sleep(0.05)
-            #if (serial_data != "b''") and (serial_data != "b'\\r\\n'") and (serial_data != "b'\\n'"):
+            if (serial_data != "b''") and (serial_data != "b'\\r\\n'") and (serial_data != "b'\\n'"):
                 # remove b' and \r\n' from string:
 
-            print(f"{serial_data}")
+                print(f"{serial_data}")
 
             # check to see if we received a transmission:
             check_if_transmission_received = serial_data.rfind("+RCV") #look for "+RCV" to know we received a transmission

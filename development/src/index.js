@@ -1,6 +1,6 @@
 import Plotly from 'plotly.js-basic-dist'
 import { Chatbox } from './chatbox';
-import { maxAndMinDots, trackingBeaconDots, homeBaseDot, layout} from './map';
+import { maxAndMinDots, trackingBeaconDots, homeBaseDot, layout, updateBeaconLocation} from './map';
 
 
 // create chatbox object:
@@ -71,6 +71,10 @@ function submitTimes(submitButton) {
             let roverX = locationResponse.xvalue;
             let roverY = locationResponse.yvalue;
             updateRoverLocation(roverX, roverY);
+            // clear input field on DOM
+            timeOne.value = '';
+            timeTwo.value = '';
+            timeThree.value = '';
         }).catch((error) => {
             console.error('Error:', error);
             this.updateChatText(chatbox)
@@ -83,7 +87,7 @@ submitTimes(timeSubmitButton);
 
 
 
-
+updateBeaconLocation();
 
 
 
