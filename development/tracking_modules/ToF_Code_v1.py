@@ -44,9 +44,9 @@ beacon2 = [1250, 550]
 beacon3 = [2000, 700]
 
 # time values from pings sent to each beacon
-time1 = 0.0000011 #14533e-9 
+time1 = 0.000000411 #14533e-9 
 time2 = 0.00000456 #5107e-9
-time3 = 0.0000090855 #6027e-9
+time3 = 0.00000090855 #6027e-9
 
 # get distance from each time
 d1 = find_distance(time1)
