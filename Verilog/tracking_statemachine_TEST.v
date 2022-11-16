@@ -47,12 +47,10 @@ reg receiving_flag = 0;
 reg arduino_prev_state = 0; // start at 0
 reg bit_mask = 1'b1; // shift this left (<<) every cycle to get correct value from time_length; (masking)
 reg binary_transmit_value = 0;
-reg[23:0] out_of_sync_count = 0;
 
 // ----- case: send_bits registers ----
-reg start_shift = 1;
-reg start_shift_delay = 0;
-reg[7:0] shift_counter = 10;
+reg start_shift_delay = 1;
+reg[27:0] shift_counter = 28'd100000000;
 
 
 
@@ -92,10 +90,8 @@ always @ (posedge clock) begin
             binary_transmit_value <= 0;
             bit_shift_counter <= 0;
             tof_testing_value = 32'b1010101010101010101010101010101; //COMMENT OUT IF NOT TESTING
-            start_shift = 1;
-            start_shift_delay = 0;
-            shift_counter = 10;
-            out_of_sync_count <= 0;
+            start_shift_delay = 1;
+            shift_counter = 28'd100000000;
 
             // AFTER RESET: CHANGE STATE TO start_counter
             state <= tof_timer;
@@ -155,15 +151,19 @@ always @ (posedge clock) begin
 
         // SEND BITS TO THE ARDUINO HERE
         send_bits: begin
-
-            // once arduino_signal changes state, enter:
-            if((arduino_signal != arduino_prev_state) && (start_shift)) begin
+        
+            // clock pulse delay:
+            if (start_shift_delay) begin
+                shift_counter = shift_counter - 1;
+            end   
+            if (shift_counter == 0) begin
+            
+                shift_counter = 28'd10000; // smaller value, half second now
                 
-                LED15 <= 0;
-
+            
                 // --- create bit shifter here ---
-                binary_transmit_value = tof_value & bit_mask;
-//                binary_transmit_value = tof_testing_value & bit_mask; // 
+//                binary_transmit_value = tof_value & bit_mask;
+                binary_transmit_value = tof_testing_value & bit_mask; // 
             
                //data_wire <= 0;
                 if(binary_transmit_value) begin
@@ -174,39 +174,24 @@ always @ (posedge clock) begin
                 end
 
                 // shift time value right 1 now:
-                tof_value = tof_value >> 1; // shift time of flight value
+//                tof_value = tof_value >> 1; // shift time of flight value
                 // ---- TESTING SECTIONS ----
-//                tof_testing_value = tof_testing_value >> 1;
+                tof_testing_value = tof_testing_value >> 1;
                 /// -------------------------------
                 
-                out_of_sync_count = 0;
-                
-                // change verilog output wire state
-                start_shift = 0;
                 start_shift_delay = 1;
 
-                // update arduino_prev_state
-                arduino_prev_state = arduino_signal; // arduino wont change state until it has successfully recevied data and is ready to inform verilog
 
                 bit_shift_counter = bit_shift_counter + 1;
+                
                 if(bit_shift_counter > 30) begin
                 // once all bits have been shifted end loop:
                     start_wire <= 0;
                     state <= wait_for_reset;
                 end 
-            end
-            else LED15 <= 1;
             
-            // 10 clock pulse delay:
-            if (start_shift_delay) begin
-                shift_counter = shift_counter - 1;
-            end   
-            if (shift_counter == 0) begin
-                start_shift = 1;
-                shift_counter = 10;
-                start_shift_delay = 0;
-                start_wire = ~start_wire; // flip state of start wire
             end
+            
             if(resetParams) begin
                 state <= reset;
             end
