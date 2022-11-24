@@ -1,2 +1,11 @@
 # RF-Communication-and-Tracking
-Repository contains the arduino and python code to communicate between two modules.
+
+
+### Hardware:
+    - Arduino Uno: https://store-usa.arduino.cc/products/arduino-uno-rev3
+    - Raspberry Pi 4 b: https://www.raspberrypi.com/products/raspberry-pi-4-model-b/
+    - Sparkfun Bi-Directional Logic Level Shifters: https://www.sparkfun.com/products/12009
+    - Reyax RYLR998 Lora Transceiver: https://reyax.com/products/rylr998/
+    - PROTO-boards
+ 
+
