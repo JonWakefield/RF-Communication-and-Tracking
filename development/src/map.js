@@ -16,7 +16,7 @@ import Plotly from 'plotly.js-basic-dist'
 // furthest point x: 2.36 km -> 2360
 // furthest point y: 3.55 km -> 1550
 
-
+const campus_map = ""
 
 // could hard code location of beacons into javascript:
 export var maxAndMinDots = {
@@ -84,7 +84,7 @@ export var data = [maxAndMinDots, homeBaseDot, trackingBeaconDots, roverLocation
 export var layout = {
     images: [
         {
-            "source": "https://raw.githubusercontent.com/JonWakefield/RF-Communication-and-Tracking/main/images/campus_map.png",
+            "source": "",
             "xref": "x",
             "yref": "y",
             "x": 0,
