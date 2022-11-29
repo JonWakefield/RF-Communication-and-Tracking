@@ -20,8 +20,8 @@ const campus_map = ""
 
 // could hard code location of beacons into javascript:
 export var maxAndMinDots = {
-    x: [0, 2360],
-    y: [0, 1550],
+    x: [-1178, 227],
+    y: [-398, 716],
     mode: 'markers',
     markers: {
         color: 'rgba(0,0,0,0)',
@@ -30,12 +30,18 @@ export var maxAndMinDots = {
 };
 
 // global vars for beacon location
-let beacon1X = 1280;
-let beacon1Y = 1080;
-let beacon2X = 1250;
-let beacon2Y = 550;
-let beacon3X = 2000;
-let beacon3Y = 700;
+let beacon1X = -455;
+let beacon1Y = -65;
+let beacon2X = -345;
+let beacon2Y = 300;
+let beacon3X = 55;
+let beacon3Y = 450;
+let beacon4X = -130;
+let beacon4Y = -260;
+let beacon5X = 0;
+let beacon5Y = 670;
+let beacon6X = -30;
+let beacon6Y = -275;
 
 export let trackingBeaconDots = {
     // x: [1st beacon, 2nd beacon, 3rd beacon]
@@ -51,8 +57,8 @@ export let trackingBeaconDots = {
 };
 
 export var homeBaseDot = {
-    x: [1947.3],
-    y: [958],
+    x: [0],
+    y: [0],
     mode: "markers",
     marker: {
         color: 'rgb(128, 0, 128)',

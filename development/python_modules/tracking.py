@@ -1,7 +1,6 @@
 
 
-
-class Tracking:
+class Tracking():
 
     # cordinates / location of beacons -> these get plotted onto grid
     beacon1 = [1280,1080] 
@@ -9,17 +8,18 @@ class Tracking:
     beacon3 = [2000, 700]
 
 
-    def rssi_to_distance(rssi):
+    def rssi_to_distance(rssi: int) -> int:
         ''' Condtional to get appr. distance value from RSSI: '''
 
+        rssi = abs(rssi)
+        print(f"rssi is {rssi}")
+
         if (rssi <= 48):
-            # 10 m 
-            pass
+            return 10
         elif ( rssi > 48 and rssi < 60):
-            # 25 m
-            pass
+            return 30
         elif (rssi > 61):
-            pass
+            return 50
 
 
     def find_square(distance, beacon):

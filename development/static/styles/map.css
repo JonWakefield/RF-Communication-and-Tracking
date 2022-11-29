@@ -14,12 +14,12 @@
 
 #map-body {
     display: flex;
-    justify-content: center;
+    justify-content: center; 
     align-items: center;
     width: 100%;
     height: 85%;
     /* background-color: aqua; */
-    /* background-image: url("images\\campus_map.png"); */
+    background-image: url("images\\campus_map.jpg");
     background-position: center; /* Center the image */
     background-size: contain; 
     /* background: rgb(190, 212, 212); */

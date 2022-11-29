@@ -4,6 +4,7 @@ import string
 from time import sleep
 import re
 import pandas as pd
+from .tracking import Tracking
 
 
 
@@ -14,7 +15,7 @@ class Communications():
     def __init__(self, key: int):
 
         # set up the arduino, make sure port # is correct
-        self.arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
+        self.arduino = serial.Serial(port='COM6', baudrate=9600, timeout=.1)
         self.arduino1 = serial.threaded.LineReader
         self.key = key
         self.key_decrypt = key * -1
@@ -23,6 +24,20 @@ class Communications():
         self.received_message = ''
         self.message_confirmation = 'y+' # sent back to arduino on successful reception of message
         self.received_snr_value = ''
+        self.received_address = ''
+        self.RSSI_values = [0,0,0]
+        self.distance_values = [0,0,0]
+        self.beacon_address = [0,0,0]
+        self.address_dict = {
+            "70":(500,600) ,
+            "71": (550,700) ,
+            "72": (250,200),
+            "73": (-100,-150),
+            "74": (-50,200),
+            "75": (50,180)
+        }
+        self.x = 0
+        self.y = 0
 
     
     # V2 of send_message:
@@ -93,56 +108,141 @@ class Communications():
 
         return str(self.received_message.translate(table))
 
+    def tracker_split_message(self):
+        ''' Each incoming tracking string should be formated as such: [RSSI][BEACON#][RSSI][BEACON#][RSSI][BEACON#]'''
+
+        rssi_index = 0
+        address_index = 0
+
+        # loop thru received message getting RSSI and Beacon #
+        received_list = self.received_message.split("[")
+        for i in range(len(received_list)):
+            # if i is odd -> RSSI value
+            if( ((i % 2) == 0) and (rssi_index < 3 )):
+                self.RSSI_values[rssi_index] = received_list[i]
+                rssi_index += 1
+            elif( ((i % 2) != 0) and (address_index < 3)): 
+                self.beacon_address[address_index] = received_list[i]
+                address_index += 1
+
+        print(f"RSSI values: {self.RSSI_values}")
+        print(f"beacon addresses: {self.beacon_address}")
+
+        return
+
+    def rssi_to_distance(self):
+        ''' Convert RSSI to distance values'''
+        
+        for i in range(len(self.RSSI_values)):
+            self.distance_values[i] = Tracking.rssi_to_distance(int(self.RSSI_values[i]))
+
+        print(f"Distance Values: {self.distance_values}")
+
+        return
+
+    def tracking_triangulation(self):
+        ''' Get (x,y) cords:'''
+
+
+        square1 = Tracking.find_square(self.distance_values[0], self.address_dict.get(self.beacon_address[0]))
+        square2 = Tracking.find_square(self.distance_values[0], self.address_dict.get(self.beacon_address[1]))
+        square3 = Tracking.find_square(self.distance_values[0], self.address_dict.get(self.beacon_address[2]))
+
+        # print(f"square 1 is {square1}")
+        # print(f"square 2 is {square2}")
+        # print(f"square 3 is {square3}")
+
+        tsbr = Tracking.intersection(Tracking.line(square1[1], square1[3]), Tracking.line(square3[2], square3[3]))
+        tsbl = Tracking.intersection(Tracking.line(square2[0], square2[2]), Tracking.line(square3[2], square3[3]))
+        tstr = Tracking.intersection(Tracking.line(square1[1], square1[3]), Tracking.line(square2[0], square2[1]))
+        tstl = square2[0]
+
+        target = Tracking.find_center(tstl,tsbr)
+        tx = str(round(target[0]))
+        ty = str(round(target[1]))
+
+        print("Target is at (" + tx + ", " + ty + ")")
+
+        return tx, ty
+
+
+
+
     def split_reception(self):
         ''' function splits the received transmission into a list with format:
             +RCV=<Address>,<Length>,<Data>,<RSSI>,<SNR>,'''
 
         a = ""
-        # need to split received transmission until various parts:
-        # print("the value in the string is:", self.received_message)
-        # split the string at each ,
+        # need to split received transmission at each ,
         received_list = self.received_message.split(",")
+
+        # check address of received message: 
+        # 35 -> Rover Tracker
+        # 34 -> Rover Communication
+        self.received_address = received_list[0]
+        # remove all non-numbers from tranmission:
+        self.received_address = re.sub("[^0-9]","", self.received_address)
+        print(f"received address is: {self.received_address}")
+
+        # check if message was sent from comms tracker:
+        if(self.received_address == "35"):
+
+            # address is 35 so we don't want to print to comms channel ... need to pass data to tracking module
+            # So let's break up the string, getting RSSI and beacon #'s
+
+            # Get data from transmission:
+            self.received_message = received_list[2]
+            print(f"Recieved data string is: {self.received_message}")
+
+            # 1. Split receieved message identifying Beacon # & RSSI
+            self.tracker_split_message()
+
+            # 2. Convert RSSI to distance
+            self.rssi_to_distance()
+
+            # 3. Call triangulation functions -> Get x,y cordinates:
+            self.x , self.y = self.tracking_triangulation()
+
+            # 4. Return to Javascript:
+            return 2 
+
         # since the received message should be formated the same everytime, hardcode the location of the saved values
-        self.received_message = received_list[2]
-        encrypted_received_message = self.received_message
-        received_rssi_value = received_list[3]
-        try:
-            self.received_snr_value = received_list[4]
-            self.received_snr_value = re.sub("[^0-9]","", self.received_snr_value)
-        except:
-            print("no SNR value received")
-            self.received_snr_value = False
 
-        # check if message or tracking update:
-        # check if recieved message starts with left bracket ([) indicating a tracking update
-        # if (self.received_message[0] == "["):
-        #     return "tracking"
-
-        # decrypt the received message:
-        self.received_message = self.decrpytion([string.ascii_lowercase, string.ascii_uppercase, string.punctuation])
-        # check if message was confirmation message:
-        if (self.received_message == self.message_confirmation):
-            print("Confirmation Received")
-            print("Message was successfully transmitted and Received")
-            print("Returning to Serial Monitor...\n")
         else:
-            # print(f"{a:<20} Home Team Points Multiplier: {a:<4} {home_multiplier:.2f}")
-            print(f"{a:<5}The received Encrypted message is: {encrypted_received_message}")
-            print(f"{a:<5}The decryped message is: {self.received_message}" )
-            print(f"{a:<5}The signal-to-noise Ratio is: {self.received_snr_value}" )
-            print(f"{a:<5}The received rssi value is: {received_rssi_value}")
-            print(f"{a:<5}Returning To Serial Monitor:")
-        # Next, now that we have received a message we need to send a confirmation back
-        # inform arduino we received a message and we should send one back:
-        #self.send_confirmation()
+            self.received_message = received_list[2]
+            encrypted_received_message = self.received_message
+            received_rssi_value = received_list[3]
+            try:
+                self.received_snr_value = received_list[4]
+                self.received_snr_value = re.sub("[^0-9]","", self.received_snr_value)
+            except:
+                print("no SNR value received")
+                self.received_snr_value = False
 
-        return
+            # check if message or tracking update:
+            # check if recieved message starts with left bracket ([) indicating a tracking update
+            # if (self.received_message[0] == "["):
+            #     return "tracking"
 
-    def send_confirmation(self):
-        '''function replys back to the transmitter after receiving a message'''
-        
-        self.arduino.write(bytes(self.message_confirmation.encode()))
-        return
+            # decrypt the received message:
+            self.received_message = self.decrpytion([string.ascii_lowercase, string.ascii_uppercase, string.punctuation])
+            # check if message was confirmation message:
+            if (self.received_message == self.message_confirmation):
+                print("Confirmation Received")
+                print("Message was successfully transmitted and Received")
+                print("Returning to Serial Monitor...\n")
+            else:
+                # print(f"{a:<20} Home Team Points Multiplier: {a:<4} {home_multiplier:.2f}")
+                print(f"{a:<5}The received Encrypted message is: {encrypted_received_message}")
+                print(f"{a:<5}The decryped message is: {self.received_message}" )
+                print(f"{a:<5}The signal-to-noise Ratio is: {self.received_snr_value}" )
+                print(f"{a:<5}The received rssi value is: {received_rssi_value}")
+                print(f"{a:<5}Returning To Serial Monitor:")
+            # Next, now that we have received a message we need to send a confirmation back
+            # inform arduino we received a message and we should send one back:
+            #self.send_confirmation()
+
+            return 1
 
     # V2 of toggling the communication beacon (on or off):
     def communication_beacon_setup(self, beacon_state):
@@ -199,9 +299,12 @@ class Communications():
                 print(f"\n{a:<10}Reception Incoming:\n")
                 self.received_message = serial_data # set serial data to received_message variable
                 # print(self.received_message)
-                self.split_reception() # call split reception to extract data
-
-                return self.received_message, self.received_snr_value
+                js_response = self.split_reception() # call split reception to extract data
+                if(js_response == 1):
+                    return 1 , self.received_message, self.received_snr_value
+                elif(js_response == 2):
+                    print("Returning Tracking Data!")
+                    return 2 , self.x , self.y
 
 
             #check if data is available in messages.csv: (aka when we want to send a message)
@@ -254,3 +357,18 @@ class Communications():
 
 # private_key = 5 # private key used for encryption and decryption
 # communication_RF = Communications(private_key)
+
+
+
+
+
+'''  Tracking overview:
+
+    1. Recieve Message / Check sender address
+    2. Split the string identifing beacon # and respective RSSI value
+    3. Get distance values from RSSI
+    4. pass distance thru tracking functions
+    5. Pass cords to javascript.
+
+
+'''

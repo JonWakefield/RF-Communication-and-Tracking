@@ -2,7 +2,7 @@ import re
 from typing import Dict
 import serial
 from flask import Blueprint, render_template, request, jsonify
-from .communication_modules import Communications
+from .python_modules import Communications
 from .tracking_modules import find_distance, find_square, find_center, intersection, line
 from datetime import datetime
 from time import sleep
@@ -40,16 +40,34 @@ def activate_lora() -> Dict:
                
     
     # Now, since this is an async function, just read in the serial monitor until a transmission has been received
-    received_message, received_snr = communication_RF.read_serial_monitor()
+    js_state, received_data_1, received_data_2 = communication_RF.read_serial_monitor()
 
-    # get time to time stamp each message:
-    time = get_time()
+    # state is 1 if received comms data:
+    if(js_state == 1):
+        # get time to time stamp each message:
+        time = get_time()
 
-    # convert received data to a dictionary:
-    return_message = {"response": received_message, "snr": received_snr, "time": time}
+        received_message = received_data_1
 
-    # return json data of dictionary 
-    return jsonify(return_message)
+        received_snr = received_data_2
+
+        # convert received data to a dictionary:
+        return_message = {"response": received_message, "snr": received_snr, "time": time}
+
+        # return json data of dictionary 
+        return jsonify(return_message)
+
+    # state is two if received tracking data
+    elif(js_state == 2):
+
+        tx = received_data_1
+
+        ty = received_data_2
+
+        return_message = {'xvalue': tx , 'yvalue': ty}
+
+        return jsonify(return_message)
+
     
 
 
@@ -148,38 +166,16 @@ def location_view():
     return jsonify(return_message)
 
 
+
+
+
+
 # function used to get the current time
 def get_time() -> str:
     # get time:
     now = datetime.now()
     time = now.strftime("%I:%M %p")
     return time
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
