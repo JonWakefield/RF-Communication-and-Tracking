@@ -1,6 +1,11 @@
-// upload code to arduino, use button on breadboard to send data to second module
-// Have RF modules communicate through software serial
-// communicate from python to arduino using regular serial
+// ---------------- Program About -------------
+// Name: Rover Tracker
+// Author: Jon Wakefield
+// Program Description: Cycle through tracking beacons,
+//                      Once three responses have been received back,
+//                      Send RSSI + beacon # back to base station (python)
+
+
 #include <SoftwareSerial.h>
 
 // location of software serial pins:
@@ -84,7 +89,7 @@ int check_if_pinged(int beacons_responded[3], int next_ping) {
         }
         else {
           next_ping = 0;
-          next_ping = check_if_pinged(beacons_responded, next_ping); 
+          next_ping = check_if_pinged(beacons_responded, next_ping);
         }
       }
     }
