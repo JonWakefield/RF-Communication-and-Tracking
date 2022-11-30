@@ -52,7 +52,7 @@ def activate_lora() -> Dict:
         received_snr = received_data_2
 
         # convert received data to a dictionary:
-        return_message = {"response": received_message, "snr": received_snr, "time": time}
+        return_message = {"state": js_state, "response": received_message, "snr": received_snr, "time": time}
 
         # return json data of dictionary 
         return jsonify(return_message)
@@ -64,7 +64,7 @@ def activate_lora() -> Dict:
 
         ty = received_data_2
 
-        return_message = {'xvalue': tx , 'yvalue': ty}
+        return_message = {"state": js_state, 'xvalue': tx , 'yvalue': ty}
 
         return jsonify(return_message)
 

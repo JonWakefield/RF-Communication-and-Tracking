@@ -1,5 +1,4 @@
-
-
+import { updateRoverLocation } from './index';
 export class Chatbox {
     constructor() {
         this.args = {
@@ -60,13 +59,26 @@ export class Chatbox {
                 
                 // Once we get the response, execute this code:
                 const jsonMessageResponse = await response.json();
-                let messageResponse = { name: "Rover", message: jsonMessageResponse.response , snr: jsonMessageResponse.snr, time: jsonMessageResponse.time };
-                console.log("messageresponse is " + messageResponse.message);
-                console.log("messageResponseTime is " + messageResponse.time);
-                console.log("The received SNR value is: " + messageResponse.snr);
-                this.messages.push(messageResponse);
-                this.updateChatText(chatbox)
+                
+                let jsStateObj = {state: jsonMessageResponse.state };
+                const jsState = jsStateObj.state;
 
+                if (jsState === 2) {
+                    console.log("Received Tracking Data")
+                    let messageResponse = { xCord: jsonMessageResponse.xvalue, yCord: jsonMessageResponse.yvalue};
+                    console.log("X-cord is: " + messageResponse.xCord);
+                    console.log("Y-cord is: " + messageResponse.yCord);
+                    updateRoverLocation(messageResponse.xCord, messageResponse.yCord);
+
+                } else {
+                    console.log("Recieved Comms transmission")
+                    let messageResponse = { name: "Rover", message: jsonMessageResponse.response , snr: jsonMessageResponse.snr, time: jsonMessageResponse.time };
+                    console.log("messageresponse is " + messageResponse.message);
+                    console.log("messageResponseTime is " + messageResponse.time);
+                    console.log("The received SNR value is: " + messageResponse.snr);
+                    this.messages.push(messageResponse);
+                    this.updateChatText(chatbox);
+                }
             }
             else {
                 return 0;

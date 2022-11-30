@@ -203,6 +203,9 @@ class Communications():
             # 3. Call triangulation functions -> Get x,y cordinates:
             self.x , self.y = self.tracking_triangulation()
 
+            # self.x = -120
+            # self.y = 60
+
             # 4. Return to Javascript:
             return 2 
 

@@ -18,7 +18,7 @@ Plotly.newPlot('map-body', data, layout);
 const timeSubmitButton = document.querySelector('.submit-times');
 
 
-function updateRoverLocation(roverXLocation, roverYLocation) {
+export function updateRoverLocation(roverXLocation, roverYLocation) {
 
     // we have (x,y) location of rover... all we need to do is update map:
     var roverLocation = {

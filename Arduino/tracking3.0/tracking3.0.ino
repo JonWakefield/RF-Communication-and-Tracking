@@ -27,7 +27,8 @@ String beacon4_address = "73";
 String beacon5_address = "74";
 String beacon6_address = "75";
 String home_base_address = "36";
-String beacon_order [6] = {beacon1_address, beacon2_address, beacon3_address, beacon4_address, beacon5_address, beacon6_address};
+//String beacon_order [6] = {beacon1_address, beacon2_address, beacon3_address, beacon4_address, beacon5_address, beacon6_address};
+String beacon_order [3] = {beacon1_address, beacon2_address, beacon3_address};
 String beacon_rssi [3] = {"0", "0", "0"}; // stores RSSI of beacon that gave us a response back
 String beacon_received_number [3] = {"0", "0", "0"}; // stores beacon # that gave us a response back
 String received_rssi = "";
@@ -79,10 +80,12 @@ int ping_beacons() {
 
   while (true) {
     // transmit message
-    Serial.println("transmitting in 2 seconds...");
-    delay(2005);
-    mySerial.println("AT+SEND=" + beacon_order[ping_num] + ",1,y"); //send data string
-    delay(105);
+    // Serial.println("transmitting in 2 seconds...");
+    delay(1005);
+    for (int i = 0; i < 5; i++) {
+      mySerial.println("AT+SEND=" + beacon_order[ping_num] + ",1,y"); //send data string
+      delay(50);
+    }
 
     // wait here until we get the "+OK" out of the system
     while (!mySerial.available()) {
@@ -91,7 +94,7 @@ int ping_beacons() {
 
       incoming_string_myserial = mySerial.readString();
 
-      Serial.println(incoming_string_myserial);
+      //      Serial.println(incoming_string_myserial);
     }
 
 
@@ -117,12 +120,12 @@ int ping_beacons() {
 
       // once we get three responses, exit
       if (total_responses_received >= 3) {
-        Serial.println("Recieved three responses...");
+        //       Serial.println("Recieved three responses...");
         return 1;
       }
       else {
 
-        Serial.println("contacting next beacon...");
+        //Serial.println("contacting next beacon...");
 
         // reset and increment local variables:
         ping_num++; // increment
@@ -135,7 +138,7 @@ int ping_beacons() {
     else if (sent_counter >= 2 ) {
       // could not connect to station, try new one
       Serial.println("Did not get a response from " + beacon_order[ping_num]);
-      Serial.println("Trying next beacon");
+      //Serial.println("Trying next beacon");
       ping_num++;
       received_response = 0;
       sent_counter = 0;
@@ -155,11 +158,11 @@ String parse_response(String response) {
 
   //+RCV=70,10,4294966278,-47,10
 
-  Serial.println("Response:" + response);
+  //Serial.println("Response:" + response);
 
   trimed_response = response.substring(12, 15);
 
-  Serial.println("trimed:" + trimed_response);
+  //Serial.println("trimed:" + trimed_response);
 
   return trimed_response;
 
@@ -183,7 +186,7 @@ int response() {
 
       // read in and print value:
       incoming_string_myserial = mySerial.readString();
-      //      Serial.println(incoming_string_myserial);
+      Serial.println(incoming_string_myserial);
 
       // Need to parse response for RSSI value here:
       received_rssi = parse_response(incoming_string_myserial);
@@ -195,7 +198,7 @@ int response() {
 
     // if we don't receive a response in currentDelay seconds, enter:
     if (millis() > (currentDelay + currentMillis)) {
-      Serial.println("Did not get a response");
+      //Serial.println("Did not get a response");
       return 0; // return 0;
     }
   }
@@ -208,20 +211,21 @@ void transmit_home() {
 
   String values_to_transmit = "";
   String values_length = "";
+  String delimiter = "[";
 
   // DEBUG & TESTING:: CHECK VALUES ARE CORRECT:
   //  for(int i = 0; i < 3; i++) {
   //    Serial.println("Recieved RSSI value " + beacon_rssi[i] + " from beacon " + beacon_received_number[i] );
   //  }
 
-  
+
 
   // To help speed up transmission process, store all RSSI & beacon #'s in single string:
   for (int i = 0; i < 3; i++) {
-    values_to_transmit = values_to_transmit + beacon_rssi[i] + beacon_received_number[i];
+    values_to_transmit = values_to_transmit + beacon_rssi[i] + delimiter + beacon_received_number[i] + delimiter;
   }
 
-  Serial.println("Values to transmit:" + values_to_transmit);
+  //Serial.println("Values to transmit:" + values_to_transmit);
 
   values_length = values_to_transmit.length(); // get length of transmission
 
