@@ -27,8 +27,8 @@ String beacon4_address = "73";
 String beacon5_address = "74";
 String beacon6_address = "75";
 String home_base_address = "36";
-//String beacon_order [6] = {beacon1_address, beacon2_address, beacon3_address, beacon4_address, beacon5_address, beacon6_address};
-String beacon_order [3] = {beacon1_address, beacon2_address, beacon3_address};
+String beacon_order [6] = {beacon1_address, beacon2_address, beacon3_address, beacon4_address, beacon5_address, beacon6_address};
+//String beacon_order [3] = {beacon1_address, beacon2_address, beacon3_address};
 String beacon_rssi [3] = {"0", "0", "0"}; // stores RSSI of beacon that gave us a response back
 String beacon_received_number [3] = {"0", "0", "0"}; // stores beacon # that gave us a response back
 String received_rssi = "";
@@ -53,8 +53,6 @@ void setup()
   mySerial.println("AT+NETWORKID=" + lora_networkid);
   delay(100);
 
-
-
 }
 
 /*
@@ -68,6 +66,33 @@ void setup()
   } */
 
 
+int check_if_pinged(int beacons_responded[3], int next_ping) {
+  // Ensures we don't get two responses from the same beacon
+  // Need to ensure next_ping is not in beacons_responded
+
+
+  while (true) {
+    for (int i = 0; i < 3; i++ ) {
+
+      Serial.println(beacons_responded[i]);
+
+      if (next_ping == beacons_responded[i]) {
+        // this means we've already received a response from that beacon:
+        if (next_ping < 5) {
+          next_ping++;
+          next_ping = check_if_pinged(beacons_responded, next_ping);
+        }
+        else {
+          next_ping = 0;
+          next_ping = check_if_pinged(beacons_responded, next_ping); 
+        }
+      }
+    }
+    return next_ping;
+  }
+}
+
+
 // transmit message:
 int ping_beacons() {
 
@@ -76,6 +101,7 @@ int ping_beacons() {
   int received_response = 0;
   int sent_counter = 0; // Counts # of times a beacon is pinged. Reset on successfully response or if >= 2
   int total_responses_received = 0; // count tell 3 ->
+  int cur_beacon_responded [3] = { -99, -99, -99};
   // --------------------------------
 
   while (true) {
@@ -116,11 +142,14 @@ int ping_beacons() {
       // store recieved rssi:
       beacon_rssi[total_responses_received] = received_rssi;
 
+      // store current iteration so we don't reach out to same beacon twice if we have to loop back thru
+      cur_beacon_responded[total_responses_received] = ping_num;
+
       total_responses_received++;
 
       // once we get three responses, exit
       if (total_responses_received >= 3) {
-        //       Serial.println("Recieved three responses...");
+        Serial.println("Recieved three responses...");
         return 1;
       }
       else {
@@ -128,20 +157,38 @@ int ping_beacons() {
         //Serial.println("contacting next beacon...");
 
         // reset and increment local variables:
-        ping_num++; // increment
-        received_response = 0; // reset
-        sent_counter = 0; // reset
-      }
+        if ( ping_num < 5) {
+          ping_num++;
+          ping_num = check_if_pinged(cur_beacon_responded, ping_num);
+          received_response = 0;
+          sent_counter = 0;
 
+        }
+        else {
+          ping_num = 0;
+          received_response = 0;
+          sent_counter = 0;
+        }
+      }
     }
     // if we pinged same station >= 2:
     else if (sent_counter >= 2 ) {
       // could not connect to station, try new one
       Serial.println("Did not get a response from " + beacon_order[ping_num]);
-      //Serial.println("Trying next beacon");
-      ping_num++;
-      received_response = 0;
-      sent_counter = 0;
+      Serial.println("Trying next beacon");
+      if ( ping_num < 5) {
+        ping_num++;
+        ping_num = check_if_pinged(cur_beacon_responded, ping_num);
+        received_response = 0;
+        sent_counter = 0;
+
+      }
+      else {
+        ping_num = 0;
+        received_response = 0;
+        sent_counter = 0;
+      }
+
 
     }
     else {
@@ -162,7 +209,7 @@ String parse_response(String response) {
 
   trimed_response = response.substring(12, 15);
 
-  //Serial.println("trimed:" + trimed_response);
+  Serial.println("trimed:" + trimed_response);
 
   return trimed_response;
 
@@ -186,7 +233,7 @@ int response() {
 
       // read in and print value:
       incoming_string_myserial = mySerial.readString();
-      Serial.println(incoming_string_myserial);
+      //Serial.println(incoming_string_myserial);
 
       // Need to parse response for RSSI value here:
       received_rssi = parse_response(incoming_string_myserial);
@@ -198,7 +245,7 @@ int response() {
 
     // if we don't receive a response in currentDelay seconds, enter:
     if (millis() > (currentDelay + currentMillis)) {
-      //Serial.println("Did not get a response");
+      // Serial.println("Did not get a response");
       return 0; // return 0;
     }
   }
@@ -225,7 +272,7 @@ void transmit_home() {
     values_to_transmit = values_to_transmit + beacon_rssi[i] + delimiter + beacon_received_number[i] + delimiter;
   }
 
-  //Serial.println("Values to transmit:" + values_to_transmit);
+  Serial.println("Values to transmit:" + values_to_transmit);
 
   values_length = values_to_transmit.length(); // get length of transmission
 
@@ -276,6 +323,9 @@ void loop()
 
 
 
+// To-Do:
+// Ensure we don't reach out to same beacon twice
+//
 
 
 
