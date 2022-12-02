@@ -1,6 +1,10 @@
 
 
 class Tracking():
+    ''' Tracking class:
+        Function's used to perform min-max triangulation calculations:
+
+    '''
 
     # cordinates / location of beacons -> these get plotted onto grid
     beacon1 = [1280,1080] 
@@ -11,15 +15,9 @@ class Tracking():
     def rssi_to_distance(rssi: int) -> int:
         ''' Condtional to get appr. distance value from RSSI: '''
 
-        rssi = abs(rssi)
-        print(f"rssi is {rssi}")
-
-        if (rssi <= 48):
-            return 10
-        elif ( rssi > 48 and rssi < 60):
-            return 30
-        elif (rssi > 61):
-            return 50
+        distance = (rssi + 55.5) / -0.1357 # function found through testing:
+        
+        return distance
 
 
     def find_square(distance, beacon):

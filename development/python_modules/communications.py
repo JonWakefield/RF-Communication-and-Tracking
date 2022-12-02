@@ -29,12 +29,12 @@ class Communications():
         self.distance_values = [0,0,0]
         self.beacon_address = [0,0,0]
         self.address_dict = {
-            "70":(500,600) ,
-            "71": (550,700) ,
-            "72": (250,200),
-            "73": (-100,-150),
-            "74": (-50,200),
-            "75": (50,180)
+            "70":(0,0) ,
+            "71": (-143,0) ,
+            "72": (150,0),
+            "73": (200,164),
+            "74": (-30,326),
+            "75": (150,383)
         }
         self.x = 0
         self.y = 0
@@ -116,14 +116,18 @@ class Communications():
 
         # loop thru received message getting RSSI and Beacon #
         received_list = self.received_message.split("[")
-        for i in range(len(received_list)):
-            # if i is odd -> RSSI value
-            if( ((i % 2) == 0) and (rssi_index < 3 )):
-                self.RSSI_values[rssi_index] = received_list[i]
-                rssi_index += 1
-            elif( ((i % 2) != 0) and (address_index < 3)): 
-                self.beacon_address[address_index] = received_list[i]
-                address_index += 1
+        try:
+            for i in range(len(received_list)):
+                # if i is odd -> RSSI value
+                if( ((i % 2) == 0) and (rssi_index < 3 )):
+                    self.RSSI_values[rssi_index] = received_list[i]
+                    rssi_index += 1
+                elif( ((i % 2) != 0) and (address_index < 3)): 
+                    self.beacon_address[address_index] = received_list[i]
+                    address_index += 1
+        except:
+            eMsg = "Did not Receive properly formatted tracking data!"
+            print(eMsg)
 
         print(f"RSSI values: {self.RSSI_values}")
         print(f"beacon addresses: {self.beacon_address}")
