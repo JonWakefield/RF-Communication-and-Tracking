@@ -15,7 +15,7 @@ class Communications():
     def __init__(self, key: int):
 
         # set up the arduino, make sure port # is correct
-        self.arduino = serial.Serial(port='COM6', baudrate=9600, timeout=.1)
+        self.arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
         self.arduino1 = serial.threaded.LineReader
         self.key = key
         self.key_decrypt = key * -1
