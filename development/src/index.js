@@ -8,7 +8,7 @@ const chatbox = new Chatbox();
 chatbox.display();
 
 // create inital dataset:
-let data = [maxAndMinDots, homeBaseDot, trackingBeaconDots];
+let data = [maxAndMinDots];
 // Rover tracking:
 Plotly.newPlot('map-body', data, layout);
 

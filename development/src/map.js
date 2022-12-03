@@ -85,7 +85,7 @@ export var roverLocation = {
 };
 
 
-export var data = [maxAndMinDots, homeBaseDot, trackingBeaconDots, roverLocation];
+export var data = [maxAndMinDots, roverLocation];
 
 export var layout = {
     images: [

@@ -34,8 +34,8 @@ String beacon6_address = "75";
 String home_base_address = "36";
 String beacon_order [6] = {beacon1_address, beacon2_address, beacon3_address, beacon4_address, beacon5_address, beacon6_address};
 //String beacon_order [3] = {beacon1_address, beacon2_address, beacon3_address};
-String beacon_rssi [3] = {"0", "0", "0"}; // stores RSSI of beacon that gave us a response back
-String beacon_received_number [3] = {"0", "0", "0"}; // stores beacon # that gave us a response back
+String beacon_rssi [6] = {"0", "0", "0", "0", "0", "0"}; // stores RSSI of beacon that gave us a response back
+String beacon_received_number [6] = {"0", "0", "0", "0", "0", "0"}; // stores beacon # that gave us a response back
 String received_rssi = "";
 // --------------------------
 
@@ -71,13 +71,13 @@ void setup()
   } */
 
 
-int check_if_pinged(int beacons_responded[3], int next_ping) {
+int check_if_pinged(int beacons_responded[6], int next_ping) {
   // Ensures we don't get two responses from the same beacon
   // Need to ensure next_ping is not in beacons_responded
 
 
   while (true) {
-    for (int i = 0; i < 3; i++ ) {
+    for (int i = 0; i < 5; i++ ) {
 
       Serial.println(beacons_responded[i]);
 
@@ -106,8 +106,13 @@ int ping_beacons() {
   int received_response = 0;
   int sent_counter = 0; // Counts # of times a beacon is pinged. Reset on successfully response or if >= 2
   int total_responses_received = 0; // count tell 3 ->
-  int cur_beacon_responded [3] = { -99, -99, -99};
+  int cur_beacon_responded [6] = { -99, -99, -99, -99, -99, -99};
+  int finished_cycle = 0;
   // --------------------------------
+
+  for ( int i ; i < 5; i ++) {
+    Serial.println(String(beacon_rssi[i]));
+  }
 
   while (true) {
     // transmit message
@@ -125,7 +130,7 @@ int ping_beacons() {
 
       incoming_string_myserial = mySerial.readString();
 
-      //      Serial.println(incoming_string_myserial);
+      //Serial.println(incoming_string_myserial);
     }
 
 
@@ -153,9 +158,9 @@ int ping_beacons() {
       total_responses_received++;
 
       // once we get three responses, exit
-      if (total_responses_received >= 3) {
+      if ((total_responses_received >= 3) & (finished_cycle)) {
         Serial.println("Recieved three responses...");
-        return 1;
+        //        return 1;
       }
       else {
 
@@ -170,9 +175,18 @@ int ping_beacons() {
 
         }
         else {
-          ping_num = 0;
-          received_response = 0;
-          sent_counter = 0;
+          // check if we should return here:
+          if (total_responses_received >= 3) {
+            Serial.println("Recieved three responses...");
+            return 1;
+          }
+          else {
+            ping_num = 0;
+            finished_cycle = 1;
+            received_response = 0;
+            sent_counter = 0;
+          }
+
         }
       }
     }
@@ -189,9 +203,17 @@ int ping_beacons() {
 
       }
       else {
-        ping_num = 0;
-        received_response = 0;
-        sent_counter = 0;
+        // check if we should return here:
+        if (total_responses_received >= 3) {
+          Serial.println("Recieved three responses...");
+          return 1;
+        }
+        else {
+          ping_num = 0;
+          finished_cycle = 1;
+          received_response = 0;
+          sent_counter = 0;
+        }
       }
 
 
@@ -271,10 +293,12 @@ void transmit_home() {
   //  }
 
 
-
+  Serial.println("In transmit_home");
   // To help speed up transmission process, store all RSSI & beacon #'s in single string:
-  for (int i = 0; i < 3; i++) {
-    values_to_transmit = values_to_transmit + beacon_rssi[i] + delimiter + beacon_received_number[i] + delimiter;
+  for (int i = 0; i < 5; i++) {
+    if (beacon_rssi[i] != "0") {
+      values_to_transmit = values_to_transmit + beacon_rssi[i] + delimiter + beacon_received_number[i] + delimiter;
+    }
   }
 
   Serial.println("Values to transmit:" + values_to_transmit);
@@ -299,6 +323,15 @@ void transmit_home() {
 
 }
 
+void reset_arrays() {
+
+  for (int i = 0; i < 5; i ++) {
+    beacon_rssi[i] = "0";
+    beacon_received_number[i] = "0";
+  }
+
+}
+
 
 // --- GLOBAL VARIABLES: GENERAL ---
 int transmit_to_hb = 0;
@@ -319,7 +352,12 @@ void loop()
     transmit_home();
 
     transmit_to_hb = 0; // reset
+
+
   }
+
+  // 4. Reset:
+  reset_arrays();
 
   // 7. Repeat Process:
 
