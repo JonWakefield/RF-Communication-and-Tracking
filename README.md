@@ -1,6 +1,6 @@
 # RF-Communication-and-Tracking
 
-Project
+RF communication and tracking project using C++, Python, and JavaScript for communication, data processing, and user interface. 
 
 ### Hardware:
 ###### The following list of hardware devices are used in conjuction with the Software. 
@@ -53,7 +53,7 @@ The Communication beacon is a portable RF extension, used to increase the total 
  based tracking.
 
  #### Hardware:
-![image](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/e6616edc-6ddc-4c7b-a082-8030cdb843b5)
+![tracking_beacon](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/455d63ca-7635-4a6b-96fe-d66a14003d52)
 
      - Arduino Uno (any arduino based uC would work).
      - Level Shifter
