@@ -48,10 +48,25 @@ The Communication beacon is a portable RF extension, used to increase the total 
 
 
  ### Tracking Beacon:
+
+ The tracking beacons are used to get RSSI measurements relative to the rovers position and send this data back to the basecamp for RF location
+ based tracking.
+
+ ### Hardware:
+ ![image](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/135350d7-722f-412c-8905-853f9f0d44a3)
+
+     - Arduino Uno (any arduino based uC would work).
+     - Level Shifter
+     - RF transceiver
+
+
+
+ ### Software:
+ ![image](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/ee2af4c3-a843-4917-9193-35ac9e44910d)
  
+     - C++
 
-
-
+ 
 
 
 If you have any additional questions or comments regarding this project, please feel free to reach out to me at jonwakefield.mi@gmail.com
