@@ -20,15 +20,18 @@ Project
  - C++ is used to 
 
 
-### Beacon:
- The beacon is a portable RF extension, used to increase the total reception and transmission range. 
+### Communication Beacon:
+The Communication beacon is a portable RF extension, used to increase the total reception and transmission range for RF communication. 
 
  #### Hardware:
+ Communication Beacon Hardware
  ![image](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/fe8d2d90-42bd-4dac-82a2-2b45f827c8e2)
+ 
      - Raspberry Pi 4b
      - Reyax RYLR998 Lora Transceiver
 
  #### Software:
+ Communication Beacon Flowchart:
  ![beacon_software](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/c668935e-2f6d-41d0-8b50-4c536bad6ba9)
 
 
