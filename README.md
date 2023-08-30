@@ -16,8 +16,15 @@ Project
     - Python
     - JavaScript
 
+![image](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/c568bc47-1505-483c-8a2c-340e5bc4529b)
+
 #### C++:
- - C++ is used to 
+ - C++ is used to
+
+#### Python:
+
+
+#### JavaScript:
 
 
 ### Communication Beacon:
@@ -25,6 +32,7 @@ The Communication beacon is a portable RF extension, used to increase the total 
 
  #### Hardware:
  Communication Beacon Hardware
+ 
  ![beacon](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/6c051aa0-5ef3-4143-be89-c61db153209e)
  
      - Raspberry Pi 4b
@@ -33,6 +41,10 @@ The Communication beacon is a portable RF extension, used to increase the total 
  #### Software:
  Communication Beacon Flowchart:
  ![beacon_software](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/c668935e-2f6d-41d0-8b50-4c536bad6ba9)
+
+
+ ### Tracking Beacon:
+ 
 
 
 
