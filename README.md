@@ -25,7 +25,7 @@ The Communication beacon is a portable RF extension, used to increase the total 
 
  #### Hardware:
  Communication Beacon Hardware
- ![image](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/fe8d2d90-42bd-4dac-82a2-2b45f827c8e2)
+ ![beacon](https://github.com/JonWakefield/RF-Communication-and-Tracking/assets/67289517/6c051aa0-5ef3-4143-be89-c61db153209e)
  
      - Raspberry Pi 4b
      - Reyax RYLR998 Lora Transceiver
