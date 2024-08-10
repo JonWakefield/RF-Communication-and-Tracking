@@ -34,11 +34,11 @@ RF communication and tracking project using C++, Python, and JavaScript for comm
 
 ##### Full-User interface (not the prettiest :) )
 
-![user-interface](photos\ui.png)
+![user-interface](photos/ui.png)
 
 ##### Example chat messages
 
-![chat](photos\chat.jpg)
+![chat](photos/chat.jpg)
 
 #### Python:
 
